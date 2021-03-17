@@ -26,8 +26,7 @@ usethis::use_vignette("tutorial")
 ### R functions
 if(FALSE) {
   ## add your dependencies (-> updates: DESCRIPTION)
-  pkg_dependencies <- c('foreign', 'httr', 'kwb.utils', 'magrittr', 'rlang', 'rvest',
-                        'stringr', 'tidyr', 'xml2')
+  pkg_dependencies <- c('foreign', 'gridExtra', 'kwb.utils')
 
   sapply(pkg_dependencies, usethis::use_package)
 

@@ -1,6 +1,3 @@
-library(foreign)
-
-
 #' adapt ABIMO output dbf-file to Berlin shape file
 #'
 #' changes order in dbf-file to match geographical
@@ -11,8 +8,7 @@ library(foreign)
 #' @param out_file file path and file name for ordered ABIMO output file (to be linked to shape files)
 #'
 #' @return ordered dbf returned and written to out_file
-#'
-#' @examples
+#' @importFrom foreign write.dbf
 #'
 ABIMO_adapt_map <- function (
   ABIMO_out,
@@ -35,7 +31,7 @@ ABIMO_adapt_map <- function (
   }
 
   #write dbf file
-  write.dbf(dataframe = x.out, file = out_file)
+  foreign::write.dbf(dataframe = x.out, file = out_file)
   print(paste('ordered ABIMO file written to', out_file))
 
   x.out
@@ -45,14 +41,11 @@ ABIMO_adapt_map <- function (
 
 #' join ABIMO in- and output files
 #'
-#' joins ABIMO in -and output Files
-#'
 #' @param file_ABIMO_out path of ABIMO output file in dbf format (incl. path)
 #' @param file_ABIMO_in path of ABIMO input file in dbf format (incl. path)
 #'
 #' @return data.frame with matched ABIMO in- and output data
 #'
-#' @examples
 #'
 abimo_comb_in_out <- function (
   file_ABIMO_out,
@@ -67,8 +60,7 @@ abimo_comb_in_out <- function (
 
   #same length?
   if(length(x$CODE) != length(y$CODE)) {
-    print('In- and output files do not match!')
-    break
+    stop('In- and output files do not match!')
   }
 
   #match order
@@ -93,20 +85,15 @@ abimo_comb_in_out <- function (
 #' @param new_dbf path of new ABIMO-input file to be written (.dbf)
 #'
 #' @return dbf file that can be processed by ABIMO
-#'
-#' @examples
-#'
+#' @importFrom foreign write.dbf
 write.dbf.abimo <- function (
   df_name,
   new_dbf
 )
 {
-  write.dbf(df_name, new_dbf)
+  foreign::write.dbf(df_name, new_dbf)
   appendSubToFile(new_dbf)
 }
-
-
-
 
 
 #' Add "SUB" field to dbf-File
@@ -119,7 +106,6 @@ write.dbf.abimo <- function (
 #'
 #' @return dbf file with sub field
 #'
-#' @examples
 appendSubToFile <- function (
   filename
 )
@@ -128,8 +114,6 @@ appendSubToFile <- function (
   on.exit(close(con))
   writeBin(as.raw(0x1A), con)
 }
-
-
 
 #' add ISU5 ID to dbf file from geoportal
 #'
@@ -142,10 +126,10 @@ appendSubToFile <- function (
 #'
 #' @return data.frame of x_no_ID with a new column "ID"
 #'
-#' @examples
+#' @importFrom foreign read.dbf
 #'
 add_ISU5_ID <- function (
-  x_no_ID = x_geoportal,
+  x_no_ID,
   ID_dbf = "C:/Aendu_lokal/ABIMO_Paper/Daten/Karten/Basis_ISU5_Daten_2015/ISU5_ID.dbf"
 )
 {
@@ -170,8 +154,10 @@ add_ISU5_ID <- function (
 #'
 #' @return data.frame of column statistics; plots and evaluation open as pdf
 #'
-#' @examples
-#'
+#' @importFrom kwb.utils preparePdf hsShowPdf
+#' @importFrom gridExtra grid.table
+#' @importFrom grDevices dev.off
+#' @importFrom graphics lines
 abimo_compare_output <- function (
   x_reference,
   x_new
@@ -214,10 +200,10 @@ abimo_compare_output <- function (
   for (comp in comp_names) {
     plot(x = x_reference[[comp]], y = x_new[[comp]], main = comp, xlab = "reference [mm]", ylab = "new run [mm]")
     max_value <- max(c(x_reference[[comp]], x_new[[comp]]))
-    lines(x = (0:max_value), y = (0:max_value), col = "red")
+    graphics::lines(x = (0:max_value), y = (0:max_value), col = "red")
   }
 
-  dev.off()
+  grDevices::dev.off()
 
   kwb.utils::hsShowPdf(pdfFile)
 
@@ -269,8 +255,6 @@ ABIMO_read_output <- function # Reads two ABIMO output files
 #'
 #' @return input data.frame with two new columns "RI_K" and "INTERF"
 #'
-#' @examples
-#'
 abimo_grwater_interflow <- function (
   abimo_df
 )
@@ -299,8 +283,6 @@ abimo_grwater_interflow <- function (
 #' @param line_BER line number in xml-file, where BERtoZero is defined, default is 56
 #'
 #' @return abimo xml-input file with changed BERtoZero-setting
-#'
-#' @examples
 #'
 abimo_xml_BER <- function (
   file_in = "data/config.xml",
@@ -333,8 +315,6 @@ abimo_xml_BER <- function (
 #' @param evap_summer potential evaporation for summer months
 #'
 #' @return abimo xml-input file with changed potential evaporation
-#'
-#' @examples
 #'
 abimo_xml_evap <- function (
   file_in = "data/config.xml",
@@ -380,8 +360,6 @@ abimo_xml_evap <- function (
 #' @param abimo_df data.frame of ABIMO output file, merged with input file
 #'
 #' @return table with averages in mm of water balance components
-#'
-#' @examples
 #'
 abimo_Berlin_average <- function (
   abimo_df

@@ -7,10 +7,10 @@ Authors@R:
              family = "Matzinger",
              role = c("aut", "cre"),
              email = "andreas.matzinger@kompetenz-wasser.de",
-             comment = c(ORCID = "0000-0001-5483-4594")), 
+             comment = c(ORCID = "0000-0001-5483-4594")),
       person(given = "Michael",
              family = "Rustler",
-             role = c("ctb"),
+             role = "ctb",
              email = "michael.rustler@kompetenz-wasser.de",
              comment = c(ORCID = "0000-0003-0647-7726")),
       person(given = "Kompetenzzentrum Wasser Berlin gGmbH (KWB)",
@@ -21,9 +21,15 @@ Description: R Package with functions for working with water
 License: MIT + file LICENSE
 URL: https://github.com/KWB-R/kwb.abimo
 BugReports: https://github.com/KWB-R/kwb.abimo/issues
+Imports: 
+    foreign,
+    gridExtra,
+    kwb.utils
+Suggests: 
+    covr
+Remotes: 
+    kwb-r/kwb.utils
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
-Suggests: 
-    covr
