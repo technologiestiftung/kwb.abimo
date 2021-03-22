@@ -9,7 +9,7 @@
 #'
 #' @return ordered dbf returned and written to out_file
 #' @importFrom foreign write.dbf
-#'
+#' @export
 ABIMO_adapt_map <- function (
   ABIMO_out,
   file_georef,
@@ -45,7 +45,7 @@ ABIMO_adapt_map <- function (
 #' @param file_ABIMO_in path of ABIMO input file in dbf format (incl. path)
 #'
 #' @return data.frame with matched ABIMO in- and output data
-#'
+#' @export
 #'
 abimo_comb_in_out <- function (
   file_ABIMO_out,
@@ -86,6 +86,7 @@ abimo_comb_in_out <- function (
 #'
 #' @return dbf file that can be processed by ABIMO
 #' @importFrom foreign write.dbf
+#' @export
 write.dbf.abimo <- function (
   df_name,
   new_dbf
@@ -105,7 +106,7 @@ write.dbf.abimo <- function (
 #' @param filename Path of file name of data.frame
 #'
 #' @return dbf file with sub field
-#'
+#' @export
 appendSubToFile <- function (
   filename
 )
@@ -127,7 +128,7 @@ appendSubToFile <- function (
 #' @return data.frame of x_no_ID with a new column "ID"
 #'
 #' @importFrom foreign read.dbf
-#'
+#' @export
 add_ISU5_ID <- function (
   x_no_ID,
   ID_dbf = "C:/Aendu_lokal/ABIMO_Paper/Daten/Karten/Basis_ISU5_Daten_2015/ISU5_ID.dbf"
@@ -158,6 +159,7 @@ add_ISU5_ID <- function (
 #' @importFrom gridExtra grid.table
 #' @importFrom grDevices dev.off
 #' @importFrom graphics lines
+#' @export
 abimo_compare_output <- function (
   x_reference,
   x_new
@@ -213,17 +215,18 @@ abimo_compare_output <- function (
 }
 
 
-ABIMO_read_output <- function # Reads two ABIMO output files
-### Reads a new ABIMO output file in dbase format.In addition the original SENSTADTUM
-### output file is read and made comparable. Alternatively two new ABIMO output files
-### can be read. Output are two comparable (same dimensions and column names) data frames.
-(
-  SENSTADTUM_dbf,
-  ### Path of original SENSTADTUM-database
-  new_dbf
-  ### Path of new output-database
-)
-{
+#' Reads two ABIMO output files
+#' @description Reads a new ABIMO output file in dbase format. In addition the
+#' original SENSTADTUM output file is read and made comparable. Alternatively
+#' two new ABIMO output files can be read. Output are two comparable (same
+#' dimensions and column names) data frames.
+#' @param SENSTADTUM_dbf path of original SENSTADTUM-database
+#' @param new_dbf path of new output-database
+#'
+#' @return output are two comparable (same dimensions and column names) data frames.
+#' @export
+
+ABIMO_read_output <- function (SENSTADTUM_dbf, new_dbf) {
   #dbase ABIMO Output Files Laden
   x_original <- read.dbf(SENSTADTUM_dbf)
   x_out <- read.dbf(new_dbf)
@@ -254,7 +257,7 @@ ABIMO_read_output <- function # Reads two ABIMO output files
 #' @param abimo_df data.frame of ABIMO output file, merged with input file
 #'
 #' @return input data.frame with two new columns "RI_K" and "INTERF"
-#'
+#' @export
 abimo_grwater_interflow <- function (
   abimo_df
 )
@@ -283,7 +286,7 @@ abimo_grwater_interflow <- function (
 #' @param line_BER line number in xml-file, where BERtoZero is defined, default is 56
 #'
 #' @return abimo xml-input file with changed BERtoZero-setting
-#'
+#' @export
 abimo_xml_BER <- function (
   file_in = "data/config.xml",
   file_out,
@@ -315,7 +318,7 @@ abimo_xml_BER <- function (
 #' @param evap_summer potential evaporation for summer months
 #'
 #' @return abimo xml-input file with changed potential evaporation
-#'
+#' @export
 abimo_xml_evap <- function (
   file_in = "data/config.xml",
   file_out,
@@ -360,7 +363,7 @@ abimo_xml_evap <- function (
 #' @param abimo_df data.frame of ABIMO output file, merged with input file
 #'
 #' @return table with averages in mm of water balance components
-#'
+#' @export
 abimo_Berlin_average <- function (
   abimo_df
 )
