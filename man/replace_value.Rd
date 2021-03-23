@@ -28,3 +28,8 @@ searches for string for parameter=pattern_value
 pattern and replaces with parameter="new_value" for all found
 entries
 }
+\examples{
+string <- '<item bezirke="15,16,18,19,20" etp="807" etps="600" />'
+replace_value(string, 100, "etp")
+replace_value(string, 100, "etps")
+}
