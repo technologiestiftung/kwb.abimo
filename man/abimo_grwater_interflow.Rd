@@ -16,5 +16,5 @@ input data.frame with two new columns "RI_K" and "INTERF"
 uses correction factor to calculate groundwater recharge
 from infiltration RI. Difference is interflow.
 Requires a combined data.frame of ABIMO output and input,
-e.g. by using function "abimo_comb_in_out"
+e.g. by using function \code{abimo_comb_in_out}
 }

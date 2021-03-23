@@ -252,7 +252,7 @@ ABIMO_read_output <- function (SENSTADTUM_dbf, new_dbf) {
 #' uses correction factor to calculate groundwater recharge
 #' from infiltration RI. Difference is interflow.
 #' Requires a combined data.frame of ABIMO output and input,
-#' e.g. by using function "abimo_comb_in_out"
+#' e.g. by using function \code{abimo_comb_in_out}
 #'
 #' @param abimo_df data.frame of ABIMO output file, merged with input file
 #'
