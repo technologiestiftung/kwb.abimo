@@ -4,7 +4,7 @@
 \alias{default_config}
 \title{Default ABIMO config.xml path}
 \usage{
-default_config(...)
+default_config()
 }
 \description{
 Default ABIMO config.xml path

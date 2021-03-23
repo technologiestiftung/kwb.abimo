@@ -15,6 +15,6 @@ extdata_file <- function(...) {
 #' @export
 #' @examples
 #' kwb.abimo::default_config()
-default_config <- function(...) {
+default_config <- function() {
   extdata_file("config.xml")
 }
