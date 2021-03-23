@@ -20,7 +20,7 @@ ABIMO_adapt_map <- function (
   x <- ABIMO_out
 
   #read georeferenced dbf file
-  y <- read.dbf(file = file_georef, as.is = TRUE)
+  y <- foreign::read.dbf(file = file_georef, as.is = TRUE)
 
 
   #match polygons
@@ -53,10 +53,10 @@ abimo_comb_in_out <- function (
 )
 {
   #read ABIMO output file
-  x <- read.dbf(file = file_ABIMO_out, as.is = TRUE)
+  x <- foreign::read.dbf(file = file_ABIMO_out, as.is = TRUE)
 
   #read ABIMO input file
-  y <- read.dbf(file = file_ABIMO_in, as.is = TRUE)
+  y <- foreign::read.dbf(file = file_ABIMO_in, as.is = TRUE)
 
   #same length?
   if(length(x$CODE) != length(y$CODE)) {
@@ -228,12 +228,12 @@ abimo_compare_output <- function (
 
 ABIMO_read_output <- function (SENSTADTUM_dbf, new_dbf) {
   #dbase ABIMO Output Files Laden
-  x_original <- read.dbf(SENSTADTUM_dbf)
-  x_out <- read.dbf(new_dbf)
+  x_original <- foreign::read.dbf(SENSTADTUM_dbf)
+  x_out <- foreign::read.dbf(new_dbf)
 
-  #Vergleich ob CODE ?bereinstimmend
+  #Vergleich ob CODE uebereinstimmend
   verify_CODE <- all(x_original$CODE == x_out$CODE)
-  if(verify_CODE == TRUE) cat("CODE-Felder stimmen ?berein") else cat("CODE-Felder stimmen nicht ?berein! Ergebnisse nicht verwendbar!")
+  if(verify_CODE == TRUE) cat("CODE-Felder stimmen ueberein") else cat("CODE-Felder stimmen nicht ueberein! Ergebnisse nicht verwendbar!")
 
   #Reduktion der Original-Daten auf Output-Spalten
   colnames <- names(x_out)
