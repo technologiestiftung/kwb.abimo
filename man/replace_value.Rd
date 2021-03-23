@@ -29,7 +29,11 @@ pattern and replaces with parameter="new_value" for all found
 entries
 }
 \examples{
+### Simple string
 string <- '<item bezirke="15,16,18,19,20" etp="807" etps="600" />'
 replace_value(string, new_value = 100, parameter = "etp")
 replace_value(string, new_value = 100, parameter = "etps")
+### Default ABIMO config
+config <- readLines(kwb.abimo::extdata_file("config.xml"))
+replace_value(config, new_value = 100, parameter = "etp")
 }
