@@ -281,14 +281,14 @@ abimo_grwater_interflow <- function (
 #' This function turns of irrigation for all areas
 #' (BERtoZero = true)
 #'
-#' @param file_in path and file name of abimo xml-input file, default is "data/config.xml"
+#' @param file_in path and file name of abimo xml-input file, default is "\code{default_config}
 #' @param file_out path and file name to write changed abimo xml-input file
 #' @param line_BER line number in xml-file, where BERtoZero is defined, default is 56
 #'
 #' @return abimo xml-input file with changed BERtoZero-setting
 #' @export
 abimo_xml_BER <- function (
-  file_in = "data/config.xml",
+  file_in = default_config(),
   file_out,
   line_BER = 56
 )
@@ -319,7 +319,7 @@ abimo_xml_BER <- function (
 #' replace_value(string, new_value = 100, parameter = "etp")
 #' replace_value(string, new_value = 100, parameter = "etps")
 #' ### Default ABIMO config
-#' config <- readLines(kwb.abimo::extdata_file("config.xml"))
+#' config <- readLines(kwb.abimo::default_config())
 #' replace_value(config, new_value = 100, parameter = "etp")
 replace_value <- function(string,
                           new_value,
@@ -339,7 +339,8 @@ replace_value <- function(string,
 #' This function sets potential evaporation
 #' to a given value for all surfaces (except lakes and rivers)
 #'
-#' @param file_in path and file name of abimo xml-input file, default is "data/config.xml"
+#' @param file_in path and file name of abimo xml-input file, default is
+#' \code{default_config}
 #' @param file_out path and file name to write changed abimo xml-input file
 #' @param evap_annual annual potential evaporation
 #' @param evap_summer potential evaporation for summer months
@@ -347,7 +348,7 @@ replace_value <- function(string,
 #' @return abimo xml-input file with changed potential evaporation
 #' @export
 abimo_xml_evap <- function (
-  file_in = "data/config.xml",
+  file_in = default_config(),
   file_out,
   evap_annual,
   evap_summer

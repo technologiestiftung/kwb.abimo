@@ -4,10 +4,11 @@
 \alias{abimo_xml_evap}
 \title{change potential evaporation in Abimo config.xml}
 \usage{
-abimo_xml_evap(file_in = "data/config.xml", file_out, evap_annual, evap_summer)
+abimo_xml_evap(file_in = default_config(), file_out, evap_annual, evap_summer)
 }
 \arguments{
-\item{file_in}{path and file name of abimo xml-input file, default is "data/config.xml"}
+\item{file_in}{path and file name of abimo xml-input file, default is
+\code{default_config}}
 
 \item{file_out}{path and file name to write changed abimo xml-input file}
 

@@ -34,6 +34,6 @@ string <- '<item bezirke="15,16,18,19,20" etp="807" etps="600" />'
 replace_value(string, new_value = 100, parameter = "etp")
 replace_value(string, new_value = 100, parameter = "etps")
 ### Default ABIMO config
-config <- readLines(kwb.abimo::extdata_file("config.xml"))
+config <- readLines(kwb.abimo::default_config())
 replace_value(config, new_value = 100, parameter = "etp")
 }
