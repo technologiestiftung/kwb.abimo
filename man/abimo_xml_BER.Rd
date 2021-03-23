@@ -7,7 +7,8 @@
 abimo_xml_BER(file_in = default_config(), file_out, line_BER = 56)
 }
 \arguments{
-\item{file_in}{path and file name of abimo xml-input file, default is \code{default_config}}
+\item{file_in}{path and file name of abimo xml-input file, default is
+\code{\link{default_config}}}
 
 \item{file_out}{path and file name to write changed abimo xml-input file}
 

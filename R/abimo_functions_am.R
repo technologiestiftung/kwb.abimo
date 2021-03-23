@@ -252,7 +252,7 @@ ABIMO_read_output <- function (SENSTADTUM_dbf, new_dbf) {
 #' uses correction factor to calculate groundwater recharge
 #' from infiltration RI. Difference is interflow.
 #' Requires a combined data.frame of ABIMO output and input,
-#' e.g. by using function \code{abimo_comb_in_out}
+#' e.g. by using function \code{\link{abimo_comb_in_out}}
 #'
 #' @param abimo_df data.frame of ABIMO output file, merged with input file
 #'
@@ -281,7 +281,8 @@ abimo_grwater_interflow <- function (
 #' This function turns of irrigation for all areas
 #' (BERtoZero = true)
 #'
-#' @param file_in path and file name of abimo xml-input file, default is \code{default_config}
+#' @param file_in path and file name of abimo xml-input file, default is
+#' \code{\link{default_config}}
 #' @param file_out path and file name to write changed abimo xml-input file
 #' @param line_BER line number in xml-file, where BERtoZero is defined, default is 56
 #'
@@ -340,7 +341,7 @@ replace_value <- function(string,
 #' to a given value for all surfaces (except lakes and rivers)
 #'
 #' @param file_in path and file name of abimo xml-input file, default is
-#' \code{default_config}
+#' \code{\link{default_config}}
 #' @param file_out path and file name to write changed abimo xml-input file
 #' @param evap_annual annual potential evaporation
 #' @param evap_summer potential evaporation for summer months
