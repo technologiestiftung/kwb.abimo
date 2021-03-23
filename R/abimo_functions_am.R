@@ -315,8 +315,8 @@ abimo_xml_BER <- function (
 #' @export
 #' @examples
 #' string <- '<item bezirke="15,16,18,19,20" etp="807" etps="600" />'
-#' replace_value(string, 100, "etp")
-#' replace_value(string, 100, "etps")
+#' replace_value(string, new_value = 100, parameter = "etp")
+#' replace_value(string, new_value = 100, parameter = "etps")
 replace_value <- function(string,
                           new_value,
                           parameter = "etp",
