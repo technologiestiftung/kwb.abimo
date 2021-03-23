@@ -281,7 +281,7 @@ abimo_grwater_interflow <- function (
 #' This function turns of irrigation for all areas
 #' (BERtoZero = true)
 #'
-#' @param file_in path and file name of abimo xml-input file, default is "\code{default_config}
+#' @param file_in path and file name of abimo xml-input file, default is \code{default_config}
 #' @param file_out path and file name to write changed abimo xml-input file
 #' @param line_BER line number in xml-file, where BERtoZero is defined, default is 56
 #'
