@@ -313,16 +313,15 @@ abimo_xml_BER <- function (
 #'
 #' @param file_in path and file name of abimo xml-input file, default is "data/config.xml"
 #' @param file_out path and file name to write changed abimo xml-input file
-#' @param line_evap line number(s) with information on potential evaporation
 #' @param evap_annual annual potential evaporation
 #' @param evap_summer potential evaporation for summer months
 #'
 #' @return abimo xml-input file with changed potential evaporation
+#' @importFrom stringr str_replace_all
 #' @export
 abimo_xml_evap <- function (
   file_in = "data/config.xml",
   file_out,
-  line_evap = c(42:46, 49),
   evap_annual,
   evap_summer
 )
@@ -330,25 +329,25 @@ abimo_xml_evap <- function (
   #read abimo xml file as lines
   textlines <- readLines(file_in)
 
+  replace_evap <- function(string,
+                           new_value,
+                           parameter = "etp",
+                           pattern_value = "\"[0-9]+?\\.?[0-9]+?\"") {
+
+    pattern <- sprintf("%s=%s", parameter, pattern_value)
+    replacement <- sprintf("%s=\"%s\"", parameter, new_value)
+
+   stringr::str_replace_all(string, pattern, replacement)
+  }
+
   #change evap settings
+  textlines <- replace_evap(textlines,
+                            new_value = evap_annual,
+                            parameter = "etp")
 
-  textlines[line_evap[1]] <- gsub(pattern = "620", replacement = evap_annual, textlines[line_evap[1]])
-  textlines[line_evap[1]] <- gsub(pattern = "500", replacement = evap_summer, textlines[line_evap[1]])
-
-  textlines[line_evap[2]] <- gsub(pattern = "630", replacement = evap_annual, textlines[line_evap[2]])
-  textlines[line_evap[2]] <- gsub(pattern = "505", replacement = evap_summer, textlines[line_evap[2]])
-
-  textlines[line_evap[3]] <- gsub(pattern = "640", replacement = evap_annual, textlines[line_evap[3]])
-  textlines[line_evap[3]] <- gsub(pattern = "515", replacement = evap_summer, textlines[line_evap[3]])
-
-  textlines[line_evap[4]] <- gsub(pattern = "650", replacement = evap_annual, textlines[line_evap[4]])
-  textlines[line_evap[4]] <- gsub(pattern = "520", replacement = evap_summer, textlines[line_evap[4]])
-
-  textlines[line_evap[5]] <- gsub(pattern = "660", replacement = evap_annual, textlines[line_evap[5]])
-  textlines[line_evap[5]] <- gsub(pattern = "530", replacement = evap_summer, textlines[line_evap[5]])
-
-  textlines[line_evap[6]] <- gsub(pattern = "660", replacement = evap_annual, textlines[line_evap[6]])
-  textlines[line_evap[6]] <- gsub(pattern = "530", replacement = evap_summer, textlines[line_evap[6]])
+  textlines <- replace_evap(textlines,
+                            new_value = evap_summer,
+                            parameter = "etps")
 
   writeLines(textlines, con = file_out)
 }

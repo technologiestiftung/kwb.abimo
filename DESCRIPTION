@@ -26,7 +26,8 @@ BugReports: https://github.com/KWB-R/kwb.abimo/issues
 Imports: 
     foreign,
     gridExtra,
-    kwb.utils
+    kwb.utils,
+    stringr
 Suggests: 
     covr
 Remotes: 
