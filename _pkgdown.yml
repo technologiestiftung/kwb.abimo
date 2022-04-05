@@ -5,15 +5,22 @@ authors:
     href: https://mrustl.de
   KEYS:
     href: https://www.kompetenz-wasser.de/en/project/keys/
-    html: <img src='https://www.kompetenz-wasser.de/wp-content/uploads/2018/09/keys-logo.png'
+    html: <img src='https://old.kompetenz-wasser.de/wp-content/uploads/2018/09/keys-logo.png'
       height='24' />
   Kompetenzzentrum Wasser Berlin gGmbH (KWB):
     href: http://www.kompetenz-wasser.de
-    html: <img src='http://www.kompetenz-wasser.de/wp-content/uploads/2017/08/cropped-logo-kwb_klein-new.png'
+    html: <img src='https://old.kompetenz-wasser.de/wp-content/uploads/2017/08/cropped-logo-kwb_klein-new.png'
       height='24' />
+
 template:
-  params:
-    bootswatch: cerulean
+  bootstrap: 5
+  bootswatch: cerulean
+  bslib:
+    bg: "#ffffff"
+    fg: "#000000"
+    primary: "#007aff"
+    border-radius: 0.5rem
+    btn-border-radius: 0.25rem
+
 development:
   mode: auto
-
