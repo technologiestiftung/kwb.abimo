@@ -6,11 +6,11 @@ authors:
   KEYS:
     href: https://www.kompetenz-wasser.de/en/forschung/projekte/keys
     html: <img src='https://old.kompetenz-wasser.de/wp-content/uploads/2018/09/keys-logo.png'
-      height='24' />
+      alt='Project KEYS' width='72' />
   Kompetenzzentrum Wasser Berlin gGmbH (KWB):
-    href: https://kompetenz-wasser.de
-    html: <img src='https://www.kompetenz-wasser.de/media/pages/forschung/projekte/keys/32d98ec36a-1639132760/keys-logo.png'
-      height='24' />
+    href: https://www.kompetenz-wasser.de
+    html: <img src='https://publications.kompetenz-wasser.de/img/KWB-Logo.svg'
+      alt='KWB' width='72' />
 
 template:
   bootstrap: 5
