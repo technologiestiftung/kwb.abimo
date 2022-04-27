@@ -1,19 +1,45 @@
-if (FALSE)
+# check_abimo_binary -----------------------------------------------------------
+check_abimo_binary <- function()
 {
-  # Download abimo executable and dependencies in zip file
-  #repo = "KWB-R/abimo"; tag = "v3.2.2"
-  zip_file <- download_asset(repo = "KWB-R/abimo", tag = "v3.2.2")
+  file <- abimo_binary()
 
-  exdir <- file.path(kwb.abimo:::extdata_file(), "abimo_win64")
+  if (file.exists(file)) {
+    return(TRUE)
+  }
 
-  kwb.utils::createDirectory(exdir)
+  file.exists(install_abimo())
+}
 
-  kwb.utils::hsOpenWindowsExplorer(dirname(zip_file))
+# abimo_binary -----------------------------------------------------------------
+abimo_binary <- function()
+{
+  file.path(extdata_file(), "abimo_win64", "Abimo.exe")
+}
 
-  #archive::archive_extract(zip_file, dir = exdir, )
+# install_abimo ----------------------------------------------------------------
+
+#' @importFrom archive archive_extract
+install_abimo <- function(tag = "v3.2.2")
+{
+  exdir <- dirname(abimo_binary())
+
+  kwb.utils::catAndRun(paste("Installing Abimo to", exdir), {
+
+    # Download abimo executable and dependencies in zip file
+    #repo = "KWB-R/abimo"; tag = "v3.2.2"
+    zip_file <- download_asset(repo = "KWB-R/abimo", tag = tag)
+
+    kwb.utils::createDirectory(exdir)
+
+    archive::archive_extract(zip_file, dir = exdir, strip_components = 1L)
+  })
+
+  invisible(exdir)
 }
 
 # download_asset ---------------------------------------------------------------
+
+#' @importFrom utils download.file
 download_asset <- function(repo, tag, destfile = NULL)
 {
   asset_info <- get_asset_info(repo, tag)
@@ -25,19 +51,22 @@ download_asset <- function(repo, tag, destfile = NULL)
     )
   }
 
-  download.file(
+  utils::download.file(
     kwb.utils::selectElements(asset_info, "url"),
     destfile,
     headers = c(
       Authorization = paste("token", remotes:::github_pat()),
       Accept = "application/octet-stream"
-    )
+    ),
+    mode = "wb"
   )
 
   destfile
 }
 
 # get_asset_info ---------------------------------------------------------------
+
+#' @importFrom gh gh
 get_asset_info <- function(repo, tag)
 {
   url_releases <- kwb.utils::resolve(
