@@ -16,18 +16,22 @@ berlin_evap_monthly <- potential_evaporation_berlin_output$mean
 
 ###get precipitation data---------------------------------------------
 
-#get data for one station
-path_rain_data <- 'C:/Aendu_lokal/ABIMO_Paper/Daten/DWD/Regen'
-file_Dahlem_hist <- '/monatswerte_RR_00403_19500101_20181231_hist/produkt_nieder_monat_19500101_20181231_00403.txt'
-file_Dahlem_recent <- '/monatswerte_RR_00403_akt/produkt_nieder_monat_20180901_20200331_00403.txt'
-file_ID <- '/monatswerte_RR_00403_akt/Metadaten_Geographie_00403.txt'
+precipitation_berlin_output <- kwb.dwd:::load_precipitation_berlin()
 
-rain_hist <- read.table(file.path(path_rain_data, file_Dahlem_hist), header = TRUE,
-                        sep = ';', dec = '.')
-rain_recent <- read.table(file.path(path_rain_data, file_Dahlem_recent), header = TRUE,
-                          sep = ';', dec = '.')
-station_meta <- read.table(file.path(path_rain_data, file_ID), header = TRUE,
-                           sep = ';', dec = '.', stringsAsFactors = FALSE)
+#get data for one station#
+#path_rain_data <- 'C:/Aendu_lokal/ABIMO_Paper/Daten/DWD/Regen'
+#path_rain_data <- 'C:/Users/lgueri/kwb_workspace/projects/amarex/ABIMO/daten_abimo_paper/DWD/Regen'
+
+#file_Dahlem_hist <- '/monatswerte_RR_00403_19500101_20181231_hist/produkt_nieder_monat_19500101_20181231_00403.txt'
+#file_Dahlem_recent <- '/monatswerte_RR_00403_akt/produkt_nieder_monat_20180901_20200331_00403.txt'
+#file_ID <- '/monatswerte_RR_00403_akt/Metadaten_Geographie_00403.txt'
+
+#rain_hist <- read.table(file.path(path_rain_data, file_Dahlem_hist), header = TRUE,
+#                        sep = ';', dec = '.')
+#rain_recent <- read.table(file.path(path_rain_data, file_Dahlem_recent), header = TRUE,
+#                          sep = ';', dec = '.')
+#station_meta <- read.table(file.path(path_rain_data, file_ID), header = TRUE,
+#                           sep = ';', dec = '.', stringsAsFactors = FALSE)
 
 #add columns year and month
 year_month <- kwb.utils::extractSubstring("(\\d{4})(\\d{2})", rain_recent$MESS_DATUM_BEGINN, 1:2)
