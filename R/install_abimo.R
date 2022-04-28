@@ -1,19 +1,19 @@
 # check_abimo_binary -----------------------------------------------------------
-check_abimo_binary <- function()
+check_abimo_binary <- function(tag = "v3.3.0")
 {
-  file <- abimo_binary()
+  file <- abimo_binary(tag)
 
   if (file.exists(file)) {
     return(TRUE)
   }
 
-  file.exists(install_abimo())
+  file.exists(install_abimo(tag))
 }
 
 # abimo_binary -----------------------------------------------------------------
-abimo_binary <- function()
+abimo_binary <- function(tag = "v3.3.0")
 {
-  file.path(extdata_file(), "abimo_win64", "Abimo.exe")
+  file.path(extdata_file(), paste0("abimo_", tag, "_win64"), "Abimo.exe")
 }
 
 # install_abimo ----------------------------------------------------------------
@@ -21,7 +21,7 @@ abimo_binary <- function()
 #' @importFrom archive archive_extract
 install_abimo <- function(tag = "v3.2.2")
 {
-  exdir <- dirname(abimo_binary())
+  exdir <- dirname(abimo_binary(tag))
 
   kwb.utils::catAndRun(paste("Installing Abimo to", exdir), {
 

@@ -8,7 +8,8 @@ run_abimo(
   input_file = NULL,
   input_data = NULL,
   output_file = NULL,
-  config_file = NULL
+  config_file = NULL,
+  tag = "v3.3.0"
 )
 }
 \arguments{
@@ -20,7 +21,7 @@ generated}
 \item{output_file}{path to output file. By default the output file has the
 same name as the input file with "_result" appended}
 
-\item{config_fiel}{path to config.xml file}
+\item{config_file}{path to config.xml file}
 }
 \value{
 data frame, read from dbf file that was created by Abimo.exe

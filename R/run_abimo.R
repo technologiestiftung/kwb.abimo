@@ -11,7 +11,8 @@
 #' @return data frame, read from dbf file that was created by Abimo.exe
 #' @export
 run_abimo <- function(
-  input_file = NULL, input_data = NULL, output_file = NULL, config_file = NULL
+  input_file = NULL, input_data = NULL, output_file = NULL, config_file = NULL,
+  tag = "v3.3.0"
 )
 {
   if (is.null(input_file) && is.null(input_data)) {
@@ -19,12 +20,11 @@ run_abimo <- function(
   }
 
   if (is.null(input_file)) {
-
     input_file <- file.path(tempdir(), "abimo_input.dbf")
     write.dbf.abimo(input_data, input_file)
   }
 
-  if (! check_abimo_binary()) {
+  if (! check_abimo_binary(tag)) {
     stop("Could not install Abimo!")
   }
 
@@ -40,7 +40,7 @@ run_abimo <- function(
     args <- c(args, paste("--config", fullwinpath(config_file)))
   }
 
-  write_abimo_stdout(args)
+  run_abimo_command_line(args, tag = tag)
 
   foreign::read.dbf(output_file)
 }
@@ -51,26 +51,31 @@ default_output_file <- function(input_file)
   paste0(kwb.utils::removeExtension(input_file), "_result.dbf")
 }
 
-# write_abimo_stdout -----------------------------------------------------------
-write_abimo_stdout <- function(args)
-{
-  writeLines(system_to_stdout(abimo_binary(), args = args))
-}
+# run_abimo_command_line -------------------------------------------------------
 
-# system_to_stdout -------------------------------------------------------------
-system_to_stdout <- function(...)
+#' Run Abimo on the Command Line
+#'
+#' @param args vector of arguments to be passed to Abimo
+#' @param tag version tag of Abimo release to be used, see
+#'   \url{https://github.com/KWB-R/abimo/releases}
+#' @return The function returns what Abimo.exe sent to the standard output (as a
+#'   vector of character).
+#' @export
+run_abimo_command_line <- function(args, tag = "v3.3.0")
 {
-  system2(stdout = TRUE, ...)
+  output <- system2(abimo_binary(tag), args = args, stdout = TRUE)
+
+  output
 }
 
 # abimo_help -------------------------------------------------------------------
 abimo_help <- function()
 {
-  write_abimo_stdout("--help")
+  run_abimo_command_line("--help")
 }
 
 # abimo_version ----------------------------------------------------------------
 abimo_version <- function()
 {
-  write_abimo_stdout("--version")
+  run_abimo_command_line("--version", echo = FALSE)
 }
