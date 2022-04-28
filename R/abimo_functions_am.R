@@ -200,7 +200,7 @@ abimo_compare_output <- function (
 
   #old vs new Plot
   for (comp in comp_names) {
-    plot(x = x_reference[[comp]], y = x_new[[comp]], main = comp, xlab = "reference [mm]", ylab = "new run [mm]")
+    graphics::plot(x = x_reference[[comp]], y = x_new[[comp]], main = comp, xlab = "reference [mm]", ylab = "new run [mm]")
     max_value <- max(c(x_reference[[comp]], x_new[[comp]]))
     graphics::lines(x = (0:max_value), y = (0:max_value), col = "red")
   }
