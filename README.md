@@ -6,8 +6,7 @@
 
 # kwb.abimo
 
-R Package with functions for working with water
-balance bodel ABIMO
+R Package with functions for working with water balance model ABIMO
 https://www.stadtentwicklung.berlin.de/umwelt/umweltatlas/download/goedecke_et_al_abimo2019_doku.pdf).
 
 ## Installation
@@ -35,3 +34,32 @@ remotes::install_github("KWB-R/kwb.abimo")
 Release: [https://kwb-r.github.io/kwb.abimo](https://kwb-r.github.io/kwb.abimo)
 
 Development: [https://kwb-r.github.io/kwb.abimo/dev](https://kwb-r.github.io/kwb.abimo/dev)
+
+## General Usage
+
+### Run Abimo with current data for Berlin as stored in this package
+
+```
+result <- kwb.abimo::run_abimo(input_data = kwb.abimo::abimo_input_2019)
+```
+
+### Run Abimo with a given dbf file
+
+```
+result <- kwb.abimo::run_abimo(input_file = input_file)
+```
+
+### Let Abimo calculate the "Bagrov curves"
+
+```
+library(ggplot2)
+
+# Let Abimo.exe output results of the Bagrov calculation
+bagrov_lines <- kwb.abimo::run_abimo_command_line("--write-bagrov-table")
+
+# Convert the text lines to a data frame
+bagrov <- read.table(text = bagrov_lines, header = TRUE, sep = ",")
+
+# Plot the Bagrov data
+ggplot(bagrov, aes(x = x, y = y, groups = factor(bag))) + geom_line()
+```
