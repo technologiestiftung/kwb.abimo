@@ -7,7 +7,7 @@
 # kwb.abimo
 
 R Package with functions for working with water balance model ABIMO
-https://www.stadtentwicklung.berlin.de/umwelt/umweltatlas/download/goedecke_et_al_abimo2019_doku.pdf).
+https://www.berlin.de/umweltatlas/_assets/literatur/goedecke_et_al_abimo2019_doku.pdf
 
 ## Installation
 

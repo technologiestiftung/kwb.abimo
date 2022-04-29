@@ -1,57 +1,37 @@
 # prepare climate data for ABIMO 1991-2019
 
-source("R/abimo_functions_am.R")
-source(system.file("extdata/load_evaporation.R", package = "kwb.dwd"))
+#source("R/abimo_functions_am.R")
+#dir(system.file("extdata/", package = "kwb.dwd"))
+#source(system.file("R/load_potential_evaporation_berlin.R", package = "kwb.dwd"))
+potential_evaporation_berlin_output <- kwb.dwd:::load_potential_evaporation_berlin()
 
 ###get potential evaporation data-----------------------------------
 
-# Base URL to potential evaporation files on DWD server
-base_url <- kwb.dwd:::ftp_path_cdc("grids_germany/monthly/evapo_p")
+#evaporation_matrices <- matrices
+#berlin_evap_monthly <- berlin_monthly_evapo_p
 
-# List data files
-relative_urls <- grep(
-  "\\.asc\\.gz$", kwb.dwd::list_url(base_url), value = TRUE
-)
+evaporation_matrices <- potential_evaporation_berlin_output
+berlin_evap_monthly <- potential_evaporation_berlin_output$mean
 
-# Provide full paths
-urls <- file.path(base_url, relative_urls)
-
-# Read all files into a list of matrices  
-evaporation_matrices <- lapply(urls, read_evaporation_matrix_from_url)
-
-# Provide metadata: file name, year, month  
-file_info <- data.frame(
-  file = relative_urls,
-  year = sapply(evaporation_matrices, kwb.utils::getAttribute, "year"),
-  month = sapply(evaporation_matrices, kwb.utils::getAttribute, "month")
-)
-
-head(file_info)
-
-str(evaporation_matrices[[1]])
-
-# Get Berlin matrix, same size as DWD evpo matrix (Berlin grid cells set to 1, rest of cells = NA)
-berlin_dwd_mask <- get_berlin_dwd_mask() 
-
-# calculate monthly stats for Berlin
-berlin_evap_monthly <- evaporation_stats(evaporation_matrices = evaporation_matrices,
-                                         file_info = file_info,
-                                         geo_mask = berlin_dwd_mask)
 
 ###get precipitation data---------------------------------------------
 
-#get data for one station
-path_rain_data <- 'C:/Aendu_lokal/ABIMO_Paper/Daten/DWD/Regen'
-file_Dahlem_hist <- '/monatswerte_RR_00403_19500101_20181231_hist/produkt_nieder_monat_19500101_20181231_00403.txt'
-file_Dahlem_recent <- '/monatswerte_RR_00403_akt/produkt_nieder_monat_20180901_20200331_00403.txt'
-file_ID <- '/monatswerte_RR_00403_akt/Metadaten_Geographie_00403.txt'
+precipitation_berlin_output <- kwb.dwd:::load_precipitation_berlin()
 
-rain_hist <- read.table(file.path(path_rain_data, file_Dahlem_hist), header = TRUE, 
-                        sep = ';', dec = '.')
-rain_recent <- read.table(file.path(path_rain_data, file_Dahlem_recent), header = TRUE, 
-                          sep = ';', dec = '.')
-station_meta <- read.table(file.path(path_rain_data, file_ID), header = TRUE, 
-                           sep = ';', dec = '.', stringsAsFactors = FALSE)
+#get data for one station#
+#path_rain_data <- 'C:/Aendu_lokal/ABIMO_Paper/Daten/DWD/Regen'
+#path_rain_data <- 'C:/Users/lgueri/kwb_workspace/projects/amarex/ABIMO/daten_abimo_paper/DWD/Regen'
+
+#file_Dahlem_hist <- '/monatswerte_RR_00403_19500101_20181231_hist/produkt_nieder_monat_19500101_20181231_00403.txt'
+#file_Dahlem_recent <- '/monatswerte_RR_00403_akt/produkt_nieder_monat_20180901_20200331_00403.txt'
+#file_ID <- '/monatswerte_RR_00403_akt/Metadaten_Geographie_00403.txt'
+
+#rain_hist <- read.table(file.path(path_rain_data, file_Dahlem_hist), header = TRUE,
+#                        sep = ';', dec = '.')
+#rain_recent <- read.table(file.path(path_rain_data, file_Dahlem_recent), header = TRUE,
+#                          sep = ';', dec = '.')
+#station_meta <- read.table(file.path(path_rain_data, file_ID), header = TRUE,
+#                           sep = ';', dec = '.', stringsAsFactors = FALSE)
 
 #add columns year and month
 year_month <- kwb.utils::extractSubstring("(\\d{4})(\\d{2})", rain_recent$MESS_DATUM_BEGINN, 1:2)
@@ -77,15 +57,15 @@ names(Berlin_climate_monthly) <- c("year",  "month", "pev_mean",  "pev_sd",    "
 rain_col <- paste0('MORR_', unique(rain_all$STATIONS_ID))
 
 for (i in (1:length(Berlin_climate_monthly$year))) {
-  
+
   year <- Berlin_climate_monthly$year[i]
   month <- Berlin_climate_monthly$month[i]
-  
+
   index <- which(rain_all$year == year & rain_all$month == month)
-  
-  
+
+
   Berlin_climate_monthly[[rain_col]][i] <- rain_all$MO_RR[index]
-  
+
 }
 
 Berlin_climate_monthly$MORR_403[Berlin_climate_monthly$MORR_403 == -999.0] <- 0
@@ -96,7 +76,7 @@ Berlin_climate_monthly$MORR_403[Berlin_climate_monthly$MORR_403 == -999.0] <- 0
 ###assemble and write ABIMO input values-------------------
 
 #remove last year if not completed
-months_per_year <- aggregate(x = Berlin_climate_monthly$year, 
+months_per_year <- aggregate(x = Berlin_climate_monthly$year,
                              by = list(Berlin_climate_monthly$year), FUN = 'length')
 
 year_skip <- months_per_year$Group.1[months_per_year[2] < 12]
@@ -117,7 +97,7 @@ ABIMO_climate_data$pot_ev_yr <- aggregate(x= Berlin_climate_monthly_wholeyears$p
                                           by = list(Berlin_climate_monthly_wholeyears$year),
                                           FUN = 'sum')[,2]
 
-index_summer <- which(Berlin_climate_monthly_wholeyears$month > 2 & 
+index_summer <- which(Berlin_climate_monthly_wholeyears$month > 2 &
                         Berlin_climate_monthly_wholeyears$month < 9)
 
 ABIMO_climate_data$rain_sum <- aggregate(x= Berlin_climate_monthly_wholeyears$MORR_403[index_summer],
