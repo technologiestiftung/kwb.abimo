@@ -37,6 +37,10 @@ install_abimo <- function(tag = "v3.2.2")
   invisible(exdir)
 }
 
+# import any function of remotes, just to let R CMD Check not complain...
+#' @importFrom remotes available_packages
+NULL
+
 # download_asset ---------------------------------------------------------------
 
 #' @importFrom utils download.file
@@ -51,11 +55,13 @@ download_asset <- function(repo, tag, destfile = NULL)
     )
   }
 
+  github_pat <- utils::getFromNamespace("github_pat", "remotes")
+
   utils::download.file(
     kwb.utils::selectElements(asset_info, "url"),
     destfile,
     headers = c(
-      Authorization = paste("token", remotes:::github_pat()),
+      Authorization = paste("token", github_pat()),
       Accept = "application/octet-stream"
     ),
     mode = "wb"
