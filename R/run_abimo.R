@@ -8,6 +8,8 @@
 #' @param output_file path to output file. By default the output file has the
 #'   same name as the input file with "_result" appended
 #' @param config_file path to config.xml file
+#' @param tag version tag of Abimo release to be used, see
+#'   \url{https://github.com/KWB-R/abimo/releases}
 #' @return data frame, read from dbf file that was created by Abimo.exe
 #' @export
 run_abimo <- function(
@@ -77,5 +79,5 @@ abimo_help <- function()
 # abimo_version ----------------------------------------------------------------
 abimo_version <- function()
 {
-  run_abimo_command_line("--version", echo = FALSE)
+  run_abimo_command_line("--version")
 }

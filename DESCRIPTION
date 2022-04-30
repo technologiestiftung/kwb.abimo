@@ -30,7 +30,8 @@ Imports:
     gridExtra,
     kwb.utils,
     remotes,
-    stringr
+    stringr,
+    xml2
 Suggests: 
     covr
 Remotes: 

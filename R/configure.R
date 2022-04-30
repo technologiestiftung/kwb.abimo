@@ -66,6 +66,7 @@ if (FALSE)
 }
 
 # create_configurator ----------------------------------------------------------
+#' @importFrom xml2 read_xml write_xml xml_attr xml_find_all xml_replace
 create_configurator <- function(xml_file)
 {
   x <- xml2::read_xml(xml_file)

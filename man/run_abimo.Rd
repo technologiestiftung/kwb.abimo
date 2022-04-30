@@ -22,6 +22,9 @@ generated}
 same name as the input file with "_result" appended}
 
 \item{config_file}{path to config.xml file}
+
+\item{tag}{version tag of Abimo release to be used, see
+\url{https://github.com/KWB-R/abimo/releases}}
 }
 \value{
 data frame, read from dbf file that was created by Abimo.exe
