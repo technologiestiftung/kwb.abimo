@@ -1,72 +1,11 @@
-#install.packages("xml2")
-
-# Configure ABIMO Model Run ----------------------------------------------------
-if (FALSE)
-{
-  # Path to Abimo configuration file
-  xml_file <- "~/qt-projects/abimo/data/config.xml"
-
-  # Create a configurator object
-  config <- create_configurator(xml_file)
-
-  # Provide xpath expressions to config elements
-  xpaths <- get_xpaths()
-
-  # Get/set Infiltrationsfaktoren using the xpath expressions...
-  config$get(xpaths$Infiltrationsfaktoren$Dachflaechen)
-  config$get(xpaths$Infiltrationsfaktoren$Belaglsklasse4)
-
-  config$set(xpaths$Infiltrationsfaktoren$Dachflaechen, 0.6)
-  config$set(xpaths$Infiltrationsfaktoren$Belaglsklasse4, 0.99)
-
-  # Get/set Bagrovwerte
-  config$get(xpaths$Bagrovwerte$Dachflaechen)
-  config$set(xpaths$Bagrovwerte$Dachflaechen, 0.123)
-  config$set(xpaths$Bagrovwerte$Belaglsklasse4, 0.91)
-
-  # Get/set ErgebnisNachkommaStellen
-  config$get(xpaths$ErgebnisNachkommaStellen$ROW)
-  config$set(xpaths$ErgebnisNachkommaStellen$ROW, 13)
-  config$set(xpaths$ErgebnisNachkommaStellen$VERDUNSTUNG, 23)
-
-  # Get/set Diverse
-  config$get(xpaths$Diverse$BERtoZero)
-  config$set(xpaths$Diverse$BERtoZero, "true")
-
-  config$get(xpath = xpaths$Diverse$NIEDKORRF)
-  config$set(xpaths$Diverse$NIEDKORRF, 1.23)
-
-  # More complicated: variable node sets
-  config$get_nodes(xpath = xpaths$Gewaesserverdunstung)
-  config$get_nodes(xpaths$PotentielleVerdunstung)
-
-  # Modify existing nodes
-  config$modify_node(
-    xpaths$PotentielleVerdunstung,
-    i = 1L,
-    bezirke = "123-125",
-    etp = 123,
-    etps = 234
-  )
-
-  config$modify_node(xpaths$PotentielleVerdunstung, 6, etp = "666")
-
-  # TODO: Add/remove nodes
-
-  config$set_node(xpath = xpaths$PotentielleVerdunstung, i = 2, new_node = node)
-
-  config$get_node(xpaths$PotentielleVerdunstung, i = 2L)
-  config$get_node(xpaths$PotentielleVerdunstung, i = 6L)
-
-  # Save the modified configuration to a new xml file
-  new_xml_file <- config$save(name = "config_001.xml")
-
-  # Open the folder containing the xml file
-  kwb.utils::hsOpenWindowsExplorer(dirname(new_xml_file))
-}
-
 # create_configurator ----------------------------------------------------------
+
+#' Create Configuration Object from Abimo Configuration File
+#'
+#' @param xml_file path to "config.xml"
+#' @return object of class "abimoConfig"
 #' @importFrom xml2 read_xml write_xml xml_attr xml_find_all xml_replace
+#' @export
 create_configurator <- function(xml_file)
 {
   x <- xml2::read_xml(xml_file)
@@ -97,7 +36,7 @@ create_configurator <- function(xml_file)
   }
 
   # Return a list of functions that allow to inspect/modify the xml tree x
-  list(
+  structure(class = "abimoConfig", list(
     get = function(xpath) {
       node <- safely_get_node(xpath)
       xml2::xml_attr(node, "value")
@@ -125,13 +64,19 @@ create_configurator <- function(xml_file)
 
     save = function(name, file = NULL) {
       file <- kwb.utils::defaultIfNULL(file, file.path(dirname(xml_file), name))
-      xml2::write_xml(x, file)
+      kwb.utils::catAndRun(paste("Writing", file), xml2::write_xml(x, file))
       file
     }
-  )
+  ))
 }
 
 # get_xpaths -------------------------------------------------------------------
+
+#' Return List of XPath Expressions to Address Config Elements
+#'
+#' @return List structure containing XPath expressions (see e.g.
+#'   \url{https://www.w3schools.com/xml/xpath_intro.asp})
+#' @export
 get_xpaths <- function()
 {
   area_types <- c(
