@@ -4,10 +4,11 @@
 \alias{create_configurator}
 \title{Create Configuration Object from Abimo Configuration File}
 \usage{
-create_configurator(xml_file)
+create_configurator(xml_file = NULL)
 }
 \arguments{
-\item{xml_file}{path to "config.xml"}
+\item{xml_file}{path to "config.xml". By default a configuration file that is
+stored in this package (\code{system.file("extdata/config.xml")}) is used.}
 }
 \value{
 object of class "abimoConfig"

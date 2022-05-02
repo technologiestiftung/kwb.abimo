@@ -69,8 +69,8 @@ head(result)
 ## Load and modify a configuration (config.xml)
 
 ```{r}
-# Create a configurator object from a Abimo configuration file
-config <- kwb.abimo::create_configurator("~/qt-projects/abimo/data/config.xml")
+# Create a configurator object (from default config.xml stored in this package)
+config <- kwb.abimo::create_configurator()
 
 # Provide xpath expressions as a means of addressing the single config elements
 xpaths <- kwb.abimo::get_xpaths()

@@ -2,12 +2,15 @@
 
 #' Create Configuration Object from Abimo Configuration File
 #'
-#' @param xml_file path to "config.xml"
+#' @param xml_file path to "config.xml". By default a configuration file that is
+#' stored in this package (\code{system.file("extdata/config.xml")}) is used.
 #' @return object of class "abimoConfig"
 #' @importFrom xml2 read_xml write_xml xml_attr xml_find_all xml_replace
 #' @export
-create_configurator <- function(xml_file)
+create_configurator <- function(xml_file = NULL)
 {
+  xml_file <- kwb.utils::defaultIfNULL(xml_file, default_config_file())
+
   x <- xml2::read_xml(xml_file)
 
   safely_get_node <- function(xpath) {
@@ -68,6 +71,12 @@ create_configurator <- function(xml_file)
       file
     }
   ))
+}
+
+# default_config_file ----------------------------------------------------------
+default_config_file <- function()
+{
+  system.file("extdata/config.xml", package = "kwb.abimo")
 }
 
 # get_xpaths -------------------------------------------------------------------
