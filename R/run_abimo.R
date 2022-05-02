@@ -58,7 +58,8 @@ run_abimo <- function(
     args <- c(args, paste("--config", fullwinpath(config_file)))
   }
 
-  run_abimo_command_line(args, tag = tag)
+  # TODO: Let Abimo.exe return non-failure exit codes!
+  suppressWarnings(run_abimo_command_line(args, tag = tag))
 
   foreign::read.dbf(output_file)
 }
