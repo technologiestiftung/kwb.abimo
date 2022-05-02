@@ -11,7 +11,7 @@ vignette: >
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  eval = FALSE
+  eval = TRUE
 )
 ```
 
@@ -28,34 +28,34 @@ head(result)
 ## Load and modify input data
 
 ```{r}
-abimo_data <- kwb.abimo::abimo_input_2019
+input_data <- kwb.abimo::abimo_input_2019
 
 # Have a look at the column types. IMPORTANT: Modifications must not change the
 # types!
-str(abimo_data)
+str(input_data)
 
 # Assigning a value of e.g. 600 to an integer column converts the column
 # type to double (floating point)!
 
-typeof(abimo_data$REGENJA) # integer
+typeof(input_data$REGENJA) # integer
 
-abimo_data$REGENJA <- 600
+input_data$REGENJA <- 600
 
 # run_abimo() will complain now...
-kwb.abimo::run_abimo(input_data = abimo_data)
+#kwb.abimo::run_abimo(input_data = input_data)
 # Error: Column 'REGENJA' does not have the expected type (integer)!
 
 # Really?
-typeof(abimo_data$REGENJA) # now double
+typeof(input_data$REGENJA) # now double
 
 # Problem: By assigning 600, the type was implicitly converted to double.
 # Use "L" to indicate integer values (or use as.numeric())
-abimo_data$REGENJA <- 600L
+input_data$REGENJA <- 600L
 
 # Or e.g.
-abimo_data$REGENJA <- as.integer(1.05 * kwb.abimo::abimo_input_2019$REGENJA)
+input_data$REGENJA <- as.integer(1.05 * kwb.abimo::abimo_input_2019$REGENJA)
 
-typeof(abimo_data$REGENJA) # now integer (again)
+typeof(input_data$REGENJA) # now integer (again)
 ```
 
 ## Run Abimo with the modified data
