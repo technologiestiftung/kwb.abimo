@@ -25,32 +25,32 @@ scenario_names <- c(
 
 ##read combined input and output files
 for (scenario_name in scenario_names) {
-  
+
   #model output file
   file_name_out <- file.path(path_scenarios, paste0(scenario_name, "out.dbf"))
-  
+
   #model input file
   file_name_in <- file.path(path_input, paste0(scenario_name,"/",scenario_name, ".dbf"))
-  
+
   #read and merge output and input files
-  assign(scenario_name, 
+  assign(scenario_name,
          abimo_comb_in_out(file_ABIMO_out = file_name_out, file_ABIMO_in = file_name_in))
-  
+
 }
 
 ##differentiate groundwater recharge and interflow
 for (scenario_name in scenario_names) {
-  
+
  assign(scenario_name,
         abimo_grwater_interflow(abimo_df = eval(as.symbol(scenario_name))))
-  
+
 }
 
 
 ##limit to BTF that are not SUW or forest
 
 #Nutzungs-Typ Wald und SUW
-typ_nutz <- read.table(file.path(path_data, "nutzungstypen_berlin.csv"), sep = ";", dec = ".", 
+typ_nutz <- read.table(file.path(path_data, "nutzungstypen_berlin.csv"), sep = ";", dec = ".",
                        as.is = TRUE, header = TRUE, colClasses = c("integer", "character"))
 
 typ_nutz_wald <- typ_nutz$Typ_Nutzung[typ_nutz$Typ_nutzung_klar == "Wald"]
@@ -58,11 +58,11 @@ typ_nutz_SUW <- typ_nutz$Typ_Nutzung[typ_nutz$Typ_nutzung_klar == "Gewässer"]
 
 #index for BTF that are not forest or SUW
 if (include_forest) {
-  
+
   index_city <- which(vs_2019$NUTZUNG != typ_nutz_SUW)
-  
+
 } else {
-  
+
   index_city <- which(vs_2019$NUTZUNG != typ_nutz_wald & vs_2019$NUTZUNG != typ_nutz_SUW)
 
 }
@@ -93,26 +93,26 @@ plot_df <- as.data.frame(plot_df)
 j <- 0
 
 for (my_col in plot_cols) {
-  
+
   for (plot_scenario in plot_scenarios) {
-    
+
     j = j + 1
-    
+
     plot_df[,j] <- eval(as.symbol(plot_scenario))[[my_col]][index_city]
-    
+
   }
-  
+
 }
 
 ##boxplot
 #boxplot(plot_df, col = c("dark green", "green", "grey"))
 
-x <- boxplot(plot_df, col = c("dark green", "green", "grey"), plot = FALSE)
+x <- graphics::boxplot(plot_df, col = c("dark green", "green", "grey"), plot = FALSE)
 
 for (i in (1:length(plot_df[1,]))) {
 
 x$stats[1,i] <- quantile(plot_df[,i], probs = 0.05)
-                
+
 x$stats[5,i] <- quantile(plot_df[,i], probs = 0.95)
 
 }
@@ -127,8 +127,8 @@ axis(side = 1, at = c(2, 5, 8, 11), labels = c("evaporation", "infiltration", "i
 
 legend(x= 8, y = 600, legend=c("forest",
                               "impervious areas",
-                              "status quo (city)"), 
-       pch=c(12,12,12), col = c("dark green", "green", "grey"), cex = 0.9, pt.cex=1.2, 
+                              "status quo (city)"),
+       pch=c(12,12,12), col = c("dark green", "green", "grey"), cex = 0.9, pt.cex=1.2,
        xpd = TRUE, y.intersp=1, bg = "white")
 
 
@@ -146,38 +146,38 @@ scenario_names <- climate_data$year
 
 # one scenario file by year
 for (i in seq_along(climate_data$year)) {
-  
-  scenario_names[i] <- paste0("x_in_", climate_data$year[i]) 
-  
+
+  scenario_names[i] <- paste0("x_in_", climate_data$year[i])
+
 }
 
 ##read combined input and output files
 for (scenario_name in scenario_names) {
-  
+
   #model output file
   file_name_out <- file.path(path_scenarios, paste0(scenario_name, "out.dbf"))
-  
+
   #model input file
   file_name_in <- file.path(path_input, paste0("climate_", stringr::str_sub(scenario_name, 6),"/",scenario_name, ".dbf"))
-  
+
   #read and merge output and input files
-  assign(scenario_name, 
+  assign(scenario_name,
          abimo_comb_in_out(file_ABIMO_out = file_name_out, file_ABIMO_in = file_name_in))
-  
+
 }
 
 ##differentiate groundwater recharge and interflow
 for (scenario_name in scenario_names) {
-  
+
   assign(scenario_name,
          abimo_grwater_interflow(abimo_df = eval(as.symbol(scenario_name))))
-  
+
 }
 
 ##limit to BTF that are not SUW or forest
 
 #Nutzungs-Typ Wald und SUW
-typ_nutz <- read.table(file.path(path_data, "nutzungstypen_berlin.csv"), sep = ";", dec = ".", 
+typ_nutz <- read.table(file.path(path_data, "nutzungstypen_berlin.csv"), sep = ";", dec = ".",
                        as.is = TRUE, header = TRUE, colClasses = c("integer", "character"))
 
 typ_nutz_wald <- typ_nutz$Typ_Nutzung[typ_nutz$Typ_nutzung_klar == "Wald"]
@@ -186,19 +186,19 @@ typ_nutz_SUW <- typ_nutz$Typ_Nutzung[typ_nutz$Typ_nutzung_klar == "Gewässer"]
 #index for BTF that are not forest or SUW
 
 if (include_forest) {
-  
+
   index_city <- which(x_in_2019$NUTZUNG != typ_nutz_SUW)
-  
+
 } else {
-  
+
   index_city <- which(x_in_2019$NUTZUNG != typ_nutz_wald & x_in_2019$NUTZUNG != typ_nutz_SUW)
-  
+
 }
 
 
 
 ### validation data Klaerwerksdaten
-BWB_data <- read.table(file.path(path_data, "Regen_Klaerwerke_BWB.csv"), sep = ";", dec = ".", 
+BWB_data <- read.table(file.path(path_data, "Regen_Klaerwerke_BWB.csv"), sep = ";", dec = ".",
                        as.is = TRUE, header = TRUE)
 CSO_average <- 5555823   #average rain volume that enters Berlin SUW via CSO
 index <- match(BWB_data$year, climate_data$year)
@@ -211,11 +211,11 @@ BWB_data$rain_runoff_CS <- BWB_data$Regenmengen_KW - BWB_data$Regenmengen_aus_Tr
 
 #estimate standard deviation
 BWB_data$stdev_BWB <- ((BWB_data$Regenmengen_KW*0.1)^2 +
-                        (BWB_data$Regenmengen_aus_Trenngebiet*0.1)^2 + 
+                        (BWB_data$Regenmengen_aus_Trenngebiet*0.1)^2 +
                          (BWB_data$CSO*0.2)^2)^0.5
 
 
-###plot annual 
+###plot annual
 
 ##assemble plot files
 
@@ -235,23 +235,23 @@ avg_wat_bal <- data.frame(climate_data, "evaporation" = NA,
 counter <- 0
 
 for (scenario_name in scenario_names) {
-  
+
   counter <- counter + 1
   evaporation[, counter] <- eval(as.symbol(scenario_name))[index_city, "VERDUNSTUN"]
   runoff[, counter] <- eval(as.symbol(scenario_name))[index_city, "ROW"]
   infiltration[, counter] <- eval(as.symbol(scenario_name))[index_city, "RI_K"]
   interflow[, counter] <- eval(as.symbol(scenario_name))[index_city, "INTERF"]
   avg_wat_bal[counter, 7:10] <- abimo_Berlin_average(abimo_df = eval(as.symbol(scenario_name))[index_city,])
-  
+
   #matching simulation for BWB validation (in m3/yr)
   if (avg_wat_bal$year[counter] >= min(BWB_data$year) &
       avg_wat_bal$year[counter] <= max(BWB_data$year)) {
-    
+
     index_BWB <- which(BWB_data$year == avg_wat_bal$year[counter])
     index_CS <- which(eval(as.symbol(scenario_name))[, "KANART"] == 1)
     BWB_data$abimo_calc[index_BWB] <- sum(eval(as.symbol(scenario_name))[index_CS, "ROWVOL"]) * 31.536
   }
-  
+
 }
 
 
@@ -268,7 +268,7 @@ kwb.plot::setMargins(left=7, top = 7, bottom = 7)
 
 ##validation KW
 #by year
-plot(x = BWB_data$year, y = BWB_data$rain_runoff_CS/1e6, cex = 1.2, ylim = c(10,45),
+graphics::plotx = BWB_data$year, y = BWB_data$rain_runoff_CS/1e6, cex = 1.2, ylim = c(10,45),
      ylab = expression(paste("Runoff from combined sewer area [10"^"6","m"^"3","yr"^"-1","]")),
      xlab = "Year",
      main = "Comparison with runoff data from BWB sewage treatment plants")
@@ -280,13 +280,13 @@ y_low <- (BWB_data$rain_runoff_CS - 2 * BWB_data$stdev_BWB)/1e6
 y_hi <- (BWB_data$rain_runoff_CS + 2 * BWB_data$stdev_BWB)/1e6
 segments(x,y_low,x,y_hi, lwd = 1)
 
-legend(x= 2012.5, y = 45, legend=c("balance at WWTP", "simulation"), 
-       pch=c(1,2), col = c("black", "blue"), cex = 0.7, pt.cex=1, 
+legend(x= 2012.5, y = 45, legend=c("balance at WWTP", "simulation"),
+       pch=c(1,2), col = c("black", "blue"), cex = 0.7, pt.cex=1,
        xpd = TRUE, y.intersp=1, bg = "white")
 
 
 #scatter
-plot(y = BWB_data$rain_runoff_CS/1e6, x = BWB_data$abimo_calc/1e6, 
+graphics::ploty = BWB_data$rain_runoff_CS/1e6, x = BWB_data$abimo_calc/1e6,
      xlim = c(10,45), ylim = c(10,45), cex = 1.2,
      xlab = expression(paste("simulated runoff [10"^"6","m"^"3","yr"^"-1","]")),
      ylab = expression(paste("balance by Berlin water utility [10"^"6","m"^"3","yr"^"-1","]")))
@@ -317,19 +317,19 @@ if (include_forest) {
 
 for (myplot in c("evaporation", "infiltration", "interflow", "runoff")) {
 
-  x <- boxplot(eval(as.symbol(myplot)), plot = FALSE)
+  x <- graphics::boxplot(eval(as.symbol(myplot)), plot = FALSE)
 
   for (i in (1:length(x$stats[1,]))) {
-  
+
     x$stats[1,i] <- quantile(eval(as.symbol(myplot))[,i], probs = 0.05)
-  
+
     x$stats[5,i] <- quantile(eval(as.symbol(myplot))[,i], probs = 0.95)
-  
+
   }
 
 
   if(myplot == "evaporation") {
-    bxp(x, outline = FALSE, boxwex = 0.4, ylab = paste(myplot,"[mm]"), 
+    bxp(x, outline = FALSE, boxwex = 0.4, ylab = paste(myplot,"[mm]"),
         main = mytitle)
   }  else {bxp(x, outline = FALSE, boxwex = 0.4, ylab = paste(myplot,"[mm]"))}
 
@@ -349,17 +349,17 @@ if (include_forest) {
   mytitle <- "Annual water balance excluding forest and lakes (volume average)"
 }
 
-plot(x = avg_wat_bal$year, y = avg_wat_bal$rain_yr*1.09,
-     ylab = "Annual sum [mm]", col = "blue", 
+graphics::plotx = avg_wat_bal$year, y = avg_wat_bal$rain_yr*1.09,
+     ylab = "Annual sum [mm]", col = "blue",
      main = mytitle)
 points(x = avg_wat_bal$year, y = avg_wat_bal$pot_ev_yr,
        col = "red")
 abline(v = c(1991:2020), col = "lightgray", lty = "dotted")
-legend(x= 2013, y = 1100, legend=c("rainfall", "potential evaporation"), 
-       pch=c(1,1), col = c("blue", "red"), cex = 0.7, pt.cex=1.2, 
+legend(x= 2013, y = 1100, legend=c("rainfall", "potential evaporation"),
+       pch=c(1,1), col = c("blue", "red"), cex = 0.7, pt.cex=1.2,
        xpd = TRUE, y.intersp=1, bg = "white")
 
-plot(x = avg_wat_bal$year, y = avg_wat_bal$evaporation,
+graphics::plotx = avg_wat_bal$year, y = avg_wat_bal$evaporation,
      ylab = "annual average [mm]", col = "red", ylim = c(0, 500))
 points(x = avg_wat_bal$year, y = avg_wat_bal$infiltration,
      col = "blue")
@@ -370,8 +370,8 @@ points(x = avg_wat_bal$year, y = avg_wat_bal$runoff,
 
 abline(v = c(1991:2020), col = "lightgray", lty = "dotted")
 
-legend(x= 2013, y = 650, legend=c("evaporation", "infiltration", "interflow", "runoff"), 
-       pch=c(1,1,1,1), col = c("red", "blue", "green", "black"), cex = 0.7, pt.cex=1, 
+legend(x= 2013, y = 650, legend=c("evaporation", "infiltration", "interflow", "runoff"),
+       pch=c(1,1,1,1), col = c("red", "blue", "green", "black"), cex = 0.7, pt.cex=1,
        xpd = TRUE, y.intersp=1, bg = "white")
 
 

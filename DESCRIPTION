@@ -1,7 +1,7 @@
 Package: kwb.abimo
 Title: R Package with Functions for Working with Water Balance
     Model ABIMO
-Version: 0.0.0.9000
+Version: 0.1.0
 Authors@R: 
     c(person(given = "Andreas",
              family = "Matzinger",
@@ -24,15 +24,24 @@ License: MIT + file LICENSE
 URL: https://github.com/KWB-R/kwb.abimo
 BugReports: https://github.com/KWB-R/kwb.abimo/issues
 Imports: 
+    archive,
     foreign,
+    gh,
     gridExtra,
     kwb.utils,
-    stringr
+    remotes,
+    stringr,
+    xml2
 Suggests: 
-    covr
+    knitr,
+    covr,
+    rmarkdown
 Remotes: 
     kwb-r/kwb.utils
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
+Depends: 
+    R (>= 2.10)
+VignetteBuilder: knitr

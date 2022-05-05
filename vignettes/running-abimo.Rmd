@@ -1,0 +1,157 @@
+---
+title: "Running Abimo"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Running Abimo}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+This vignette aims at demonstrating how to work with the kwb.abimo package.
+
+## Basic model run
+
+```{r basic-run}
+result <- kwb.abimo::run_abimo(input_data = kwb.abimo::abimo_input_2019)
+
+head(result)
+```
+
+## Load and modify input data
+
+```{r}
+input_data <- kwb.abimo::abimo_input_2019
+
+# Have a look at the column types. IMPORTANT: Modifications must not change the
+# types!
+str(input_data)
+
+# Assigning a value of e.g. 600 to an integer column converts the column
+# type to double (floating point)!
+
+typeof(input_data$REGENJA) # integer
+
+input_data$REGENJA <- 600
+
+# run_abimo() will complain now...
+#kwb.abimo::run_abimo(input_data = input_data)
+# Error: Column 'REGENJA' does not have the expected type (integer)!
+
+# Really?
+typeof(input_data$REGENJA) # now double
+
+# Problem: By assigning 600, the type was implicitly converted to double.
+# Use "L" to indicate integer values (or use as.numeric())
+input_data$REGENJA <- 600L
+
+# Or e.g.
+input_data$REGENJA <- as.integer(1.05 * kwb.abimo::abimo_input_2019$REGENJA)
+
+typeof(input_data$REGENJA) # now integer (again)
+```
+
+## Run Abimo with the modified data
+
+```{r}
+result <- kwb.abimo::run_abimo(input_data = input_data)
+
+head(result)
+```
+
+## Load and modify a configuration (config.xml)
+
+```{r}
+# Create a configurator object (from default config.xml stored in this package)
+config <- kwb.abimo::create_configurator()
+
+# Provide xpath expressions as a means of addressing the single config elements
+xpaths <- kwb.abimo::get_xpaths()
+
+# Get/set Infiltrationsfaktoren using the xpath expressions...
+xp <- xpaths$Infiltrationsfaktoren
+
+config$get(xp$Dachflaechen)
+config$set(xp$Dachflaechen, 0.6)
+config$get(xp$Dachflaechen) # check the change
+
+config$get(xp$Belaglsklasse1)
+config$set(xp$Belaglsklasse1, 0.99)
+config$get(xp$Belaglsklasse1) # check the change
+
+# Get/set Bagrovwerte ...
+xp <- xpaths$Bagrovwerte
+# ...
+
+# Get/set ErgebnisNachkommaStellen...
+xp <- xpaths$ErgebnisNachkommaStellen
+# ...
+
+# Get/set Diverse ...
+xp <- xpaths$Diverse
+config$get(xp$BERtoZero)
+config$set(xp$BERtoZero, "true")
+
+config$get(xp$NIEDKORRF)
+config$set(xp$NIEDKORRF, 1.23)
+
+# Check the changes
+config$get(xp$BERtoZero)
+config$get(xp$NIEDKORRF)
+
+# More complicated: variable node sets
+
+# Modify existing nodes
+xp <- xpaths$PotentielleVerdunstung
+config$get_nodes(xp)
+config$modify_node(xp, i = 1L, bezirke = "123-125", etp = 123, etps = 234)
+config$modify_node(xp, 6, etp = "666")
+config$get_nodes(xp) # check the changes
+
+xp <- xpaths$PotentielleVerdunstung
+config$get_nodes(xp)
+#config$modify_node(xp, ...)
+
+# TODO: Add/remove nodes
+```
+
+## Run Abimo with the modified configuration
+
+```{r run-with-config}
+result <- kwb.abimo::run_abimo(
+  input_data = kwb.abimo::abimo_input_2019,
+  config = config
+)
+
+head(result)
+```
+
+Internally, a new `config_<date-time-string>.xml` file was created in the
+temporary folder:
+
+```{r dir-tempdir}
+dir(tempdir())
+```
+
+## Manually save configuration object to XML
+
+You may create your own config files from config objects using `save()`:
+
+```{r save-config}
+new_xml_file <- config$save(name = "config_tmp.xml")
+```
+
+If something goes wrong, you may compare the created xml file with the
+original file, e.g. using TortoiseSVN->Diff...
+
+```{r open-tempdir}
+# Open the folder containing the xml file
+kwb.utils::hsOpenWindowsExplorer(dirname(new_xml_file))
+```
