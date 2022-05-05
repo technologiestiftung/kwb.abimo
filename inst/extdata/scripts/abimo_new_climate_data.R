@@ -54,6 +54,20 @@ abimo_climate_data <- data.frame(year = years,
 write.csv(abimo_climate_data, file = 'C:/Users/lgueri/kwb_workspace/projects/amarex/ABIMO/daten_abimo_paper/DWD/Regen/ABIMO_climate_data_new.csv')
 
 
+########################### PLOT ABIMO_CLIMATE_DATA ############################
+library(ggplot2)
+#theme_set(theme_classic())
+
+
+ggplot(abimo_climate_data, aes(x=year, y=rain_yr)) +
+  geom_bar(aes(y=rain_yr, fill='rain year'), position='dodge', stat='identity') +
+  geom_bar(aes(y=rain_sum, fill='rain apr-sep'), position='dodge', stat='identity') +
+  theme(axis.text.x = element_text(angle=0, vjust=0.6)) +
+  scale_x_continuous(breaks = seq(1991, 2021, 2)) +
+  geom_text(aes(label=round(rain_yr,1)), vjust=-0.3, size=2.5) +
+  labs(title="Histogram on Annual and Summer Rainfall in Berlin", x='year', y='rainfall [mm]')
+
+
 ########################### ONLY EVALUTATION PURPOSES ##########################
 # Check, if old and new computation of precipitation and pot evaporation are in similar range
 new_csv <- read.csv(file = 'C:/Users/lgueri/kwb_workspace/projects/amarex/ABIMO/daten_abimo_paper/DWD/Regen/ABIMO_climate_data_new.csv')
