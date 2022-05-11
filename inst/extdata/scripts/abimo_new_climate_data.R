@@ -16,7 +16,7 @@ precipitation_berlin_output <- kwb.dwd:::load_precipitation_berlin()
 years <- unique(potential_evaporation_berlin_output$year)
 
 # Defining the summer months -----!!!edit months!!!------
-sum_months <- c(4:9)
+sum_months <- c(5:10)
 
 # Define lists
 rain_yr <- c()
@@ -61,7 +61,7 @@ library(ggplot2)
 
 ggplot(abimo_climate_data, aes(x=year, y=rain_yr)) +
   geom_bar(aes(y=rain_yr, fill='rain year'), position='dodge', stat='identity') +
-  geom_bar(aes(y=rain_sum, fill='rain apr-sep'), position='dodge', stat='identity') +
+  geom_bar(aes(y=rain_sum, fill='rain May-Oct'), position='dodge', stat='identity') +
   theme(axis.text.x = element_text(angle=0, vjust=0.6)) +
   scale_x_continuous(breaks = seq(1991, 2021, 2)) +
   geom_text(aes(label=round(rain_yr,1)), vjust=-0.3, size=2.5) +
