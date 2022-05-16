@@ -68,6 +68,15 @@ ggplot(abimo_climate_data, aes(x=year, y=rain_yr)) +
   labs(title="Histogram on Annual and Summer Rainfall in Berlin", x='year', y='rainfall [mm]')
 
 
+############################ CREATE 30 YRS AVERAGE #############################
+climate_averages <- data.frame(years = '1991-2020',
+                               rain_yr = round(mean(abimo_climate_data$rain_yr[1:30]),0),
+                               rain_sum = round(mean(abimo_climate_data$rain_sum[1:30]),0),
+                               pot_ev_yr = round(mean(abimo_climate_data$pot_ev_yr[1:30]),0),
+                               pot_ev_sum = round(mean(abimo_climate_data$pot_ev_sum[1:30]),0))
+
+
+
 ########################### ONLY EVALUTATION PURPOSES ##########################
 # Check, if old and new computation of precipitation and pot evaporation are in similar range
 new_csv <- read.csv(file = 'C:/Users/lgueri/kwb_workspace/projects/amarex/ABIMO/daten_abimo_paper/DWD/Regen/ABIMO_climate_data_new.csv')
