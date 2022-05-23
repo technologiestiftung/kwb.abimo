@@ -4,7 +4,7 @@
 #'
 #' @param xml_file path to "config.xml". By default a configuration file that is
 #' stored in this package (\code{system.file("extdata/config.xml")}) is used.
-#' @return object of class "abimoConfig"
+#' @return object of class "abimo_config"
 #' @importFrom xml2 read_xml write_xml xml_attr xml_find_all xml_replace
 #' @export
 create_configurator <- function(xml_file = NULL)
@@ -39,7 +39,7 @@ create_configurator <- function(xml_file = NULL)
   }
 
   # Return a list of functions that allow to inspect/modify the xml tree x
-  structure(class = "abimoConfig", list(
+  structure(class = "abimo_config", list(
     get = function(xpath) {
       node <- safely_get_node(xpath)
       xml2::xml_attr(node, "value")
@@ -66,9 +66,7 @@ create_configurator <- function(xml_file = NULL)
     },
 
     save = function(name, file = NULL) {
-      file <- kwb.utils::defaultIfNULL(file, file.path(dirname(xml_file), name))
-      kwb.utils::catAndRun(paste("Writing", file), xml2::write_xml(x, file))
-      file
+      save_config(x, xml_file, name, file)
     }
   ))
 }
@@ -163,3 +161,10 @@ set_node_attributes <- function(node, ...)
   node
 }
 
+# save_config ------------------------------------------------------------------
+save_config <- function(x, xml_file, name, file)
+{
+  file <- kwb.utils::defaultIfNULL(file, file.path(dirname(xml_file), name))
+  kwb.utils::catAndRun(paste("Writing", file), xml2::write_xml(x, file))
+  file
+}

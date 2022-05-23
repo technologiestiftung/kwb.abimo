@@ -31,7 +31,7 @@ run_abimo <- function(
   }
 
   if (! is.null(config)) {
-    stopifnot(inherits(config, "abimoConfig"))
+    stopifnot(inherits(config, "abimo_config"))
     if (! is.null(config_file)) {
       warning(
         "run_abimo(): 'config_file' is ignored as 'config' object is given!"
