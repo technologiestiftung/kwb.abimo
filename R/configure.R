@@ -66,9 +66,7 @@ create_configurator <- function(xml_file = NULL)
     },
 
     save = function(name, file = NULL) {
-      file <- kwb.utils::defaultIfNULL(file, file.path(dirname(xml_file), name))
-      kwb.utils::catAndRun(paste("Writing", file), xml2::write_xml(x, file))
-      file
+      save_config(x, xml_file, name, file)
     }
   ))
 }
@@ -163,3 +161,10 @@ set_node_attributes <- function(node, ...)
   node
 }
 
+# save_config ------------------------------------------------------------------
+save_config <- function(x, xml_file, name, file)
+{
+  file <- kwb.utils::defaultIfNULL(file, file.path(dirname(xml_file), name))
+  kwb.utils::catAndRun(paste("Writing", file), xml2::write_xml(x, file))
+  file
+}
