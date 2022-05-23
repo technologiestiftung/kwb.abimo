@@ -49,7 +49,7 @@ input_data$REGENJA <- 600
 typeof(input_data$REGENJA) # now double
 
 # Problem: By assigning 600, the type was implicitly converted to double.
-# Use "L" to indicate integer values (or use as.numeric())
+# Use "L" to indicate integer values (or use as.integer())
 input_data$REGENJA <- 600L
 
 # Or e.g.
