@@ -11,7 +11,7 @@ create_configurator(xml_file = NULL)
 stored in this package (\code{system.file("extdata/config.xml")}) is used.}
 }
 \value{
-object of class "abimoConfig"
+object of class "abimo_config"
 }
 \description{
 Create Configuration Object from Abimo Configuration File
