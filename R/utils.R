@@ -2,11 +2,9 @@
 
 #' Get Path to File in This Package
 #'
-#' @param \dots parts of path passed to \code{\link{system.file}}
+#' @inheritParams kwb.utils::extdataFile
 #' @export
-extdata_file <- function(...) {
-  system.file("extdata", ..., package = "kwb.abimo")
-}
+extdata_file <- kwb.utils::createFunctionExtdataFile("kwb.abimo")
 
 # default_config -----------------------------------------------------------------
 
