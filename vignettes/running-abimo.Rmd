@@ -14,17 +14,16 @@ is_windows <- .Platform$OS.type == "windows"
 
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>",
-  eval = is_windows
+  comment = "#>"
 )
-is_windows <- .Platform$OS.type == "windows"
+
 ```
 
 This vignette aims at demonstrating how to work with the kwb.abimo package.
 
 ## Basic model run
 
-```{r basic-run}
+```{r basic-run, eval = is_windows}
 result <- kwb.abimo::run_abimo(input_data = kwb.abimo::abimo_input_2019)
 
 head(result)
@@ -32,7 +31,7 @@ head(result)
 
 ## Load and modify input data
 
-```{r}
+```{r load_and_modify_input, eval = is_windows}
 input_data <- kwb.abimo::abimo_input_2019
 
 # Have a look at the column types. IMPORTANT: Modifications must not change the
@@ -65,7 +64,7 @@ typeof(input_data$REGENJA) # now integer (again)
 
 ## Run Abimo with the modified data
 
-```{r}
+```{r run_abimo_modified_input, eval = is_windows}
 result <- kwb.abimo::run_abimo(input_data = input_data)
 
 head(result)
@@ -73,7 +72,7 @@ head(result)
 
 ## Load and modify a configuration (config.xml), updated for v0.2.0!
 
-```{r}
+```{r load_and_modify_config, eval = is_windows}
 # Create a configuration object (from default config.xml stored in this package)
 config <- kwb.abimo:::read_config()
 
@@ -139,7 +138,7 @@ config$section_PotentielleVerdunstung$item
 
 ## Run Abimo with the modified configuration
 
-```{r run-with-config}
+```{r run-with-config, eval = is_windows}
 result <- kwb.abimo::run_abimo(
   input_data = kwb.abimo::abimo_input_2019,
   config = config
@@ -151,7 +150,7 @@ head(result)
 Internally, a new `config_<date-time-string>.xml` file was created in the
 temporary folder:
 
-```{r dir-tempdir}
+```{r dir-tempdir, eval = is_windows}
 dir(tempdir())
 ```
 
@@ -159,7 +158,7 @@ dir(tempdir())
 
 You may create your own config files from config objects using `save()`:
 
-```{r save-config}
+```{r save-config, eval = is_windows}
 new_xml_file <- config$save(name = "config_tmp.xml")
 ```
 
