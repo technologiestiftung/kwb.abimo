@@ -31,7 +31,7 @@ run_abimo <- function(
   }
 
   if (! is.null(config)) {
-    stopifnot(inherits(config, "abimoConfig"))
+    stopifnot(inherits(config, "abimo_config"))
     if (! is.null(config_file)) {
       warning(
         "run_abimo(): 'config_file' is ignored as 'config' object is given!"
@@ -46,16 +46,14 @@ run_abimo <- function(
     stop("Could not install Abimo!")
   }
 
-  fullwinpath <- function(x) kwb.utils::windowsPath(path.expand(x))
-
   output_file <- kwb.utils::defaultIfNULL(
     output_file, default_output_file(input_file)
   )
 
-  args <- fullwinpath(c(input_file, output_file))
+  args <- kwb.utils::fullWinPath(c(input_file, output_file))
 
   if (! is.null(config_file)) {
-    args <- c(args, paste("--config", fullwinpath(config_file)))
+    args <- c(args, paste("--config", kwb.utils::fullWinPath(config_file)))
   }
 
   # TODO: Let Abimo.exe return non-failure exit codes!

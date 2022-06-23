@@ -3,16 +3,21 @@ title: "Running Abimo"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Running Abimo}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r, include = FALSE}
+is_windows <- .Platform$OS.type == "windows"
+
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  eval = FALSE
+  eval = is_windows
 )
+is_windows <- .Platform$OS.type == "windows"
 ```
 
 This vignette aims at demonstrating how to work with the kwb.abimo package.
@@ -49,7 +54,7 @@ input_data$REGENJA <- 600
 typeof(input_data$REGENJA) # now double
 
 # Problem: By assigning 600, the type was implicitly converted to double.
-# Use "L" to indicate integer values (or use as.numeric())
+# Use "L" to indicate integer values (or use as.integer())
 input_data$REGENJA <- 600L
 
 # Or e.g.
@@ -66,60 +71,70 @@ result <- kwb.abimo::run_abimo(input_data = input_data)
 head(result)
 ```
 
-## Load and modify a configuration (config.xml)
+## Load and modify a configuration (config.xml), updated for v0.2.0!
 
 ```{r}
-# Create a configurator object (from default config.xml stored in this package)
-config <- kwb.abimo::create_configurator()
+# Create a configuration object (from default config.xml stored in this package)
+config <- kwb.abimo:::read_config()
 
-# Provide xpath expressions as a means of addressing the single config elements
-xpaths <- kwb.abimo::get_xpaths()
+# Show the content of one section of the configuration
+config$section_Infiltrationsfaktoren$get_xml()
 
-# Get/set Infiltrationsfaktoren using the xpath expressions...
-xp <- xpaths$Infiltrationsfaktoren
+# Get/set Infiltrationsfaktoren and check the change
+config$section_Infiltrationsfaktoren$item_Dachflaechen
+config$section_Infiltrationsfaktoren$item_Dachflaechen$set(value = 0.6)
+config$section_Infiltrationsfaktoren$item_Dachflaechen
 
-config$get(xp$Dachflaechen)
-config$set(xp$Dachflaechen, 0.6)
-config$get(xp$Dachflaechen) # check the change
+# Similar: other items "Belaglsklasse1", "Belaglsklasse2",
+# "Belaglsklasse3", "Belaglsklasse4", e.g.
+config$section_Infiltrationsfaktoren$item_Belaglsklasse2
+config$section_Infiltrationsfaktoren$item_Belaglsklasse2$set(value = 0.99)
+config$section_Infiltrationsfaktoren$item_Belaglsklasse2
 
-config$get(xp$Belaglsklasse1)
-config$set(xp$Belaglsklasse1, 0.99)
-config$get(xp$Belaglsklasse1) # check the change
+# Similar: Get/set item values in sections "Bagrovwerte" or 
+# "ErgebnisNachkommaStellen", "Diverse"
 
-# Get/set Bagrovwerte ...
-xp <- xpaths$Bagrovwerte
-# ...
+# More complicated: sections "Gewaesserverdunstung" and "PotentielleVerdunstung". 
+# Here we may want to keep only one entry for all "bezirke"
 
-# Get/set ErgebnisNachkommaStellen...
-xp <- xpaths$ErgebnisNachkommaStellen
-# ...
+# Show section "PotentielleVerdunstung"
+config$section_PotentielleVerdunstung$get_xml()
 
-# Get/set Diverse ...
-xp <- xpaths$Diverse
-config$get(xp$BERtoZero)
-config$set(xp$BERtoZero, "true")
+# Change values of an existing item
+config$section_PotentielleVerdunstung$item_1$set(
+  bezirke = "123-125", etp = 123, etps = 234
+)
 
-config$get(xp$NIEDKORRF)
-config$set(xp$NIEDKORRF, 1.23)
+# Check the change
+config$section_PotentielleVerdunstung$get_xml()
 
-# Check the changes
-config$get(xp$BERtoZero)
-config$get(xp$NIEDKORRF)
+# This was just for demonstration. Now lets remove items 1 to 5
+config$section_PotentielleVerdunstung$remove("item_1")
+config$section_PotentielleVerdunstung$remove("item_2")
+config$section_PotentielleVerdunstung$remove("item_3")
+config$section_PotentielleVerdunstung$remove("item_4")
+config$section_PotentielleVerdunstung$remove("item_5")
 
-# More complicated: variable node sets
+# Show the remaining item in section "Gewaesserverdunstung". 
+# Only the last item remains
+config$section_PotentielleVerdunstung$get_xml()
 
-# Modify existing nodes
-xp <- xpaths$PotentielleVerdunstung
-config$get_nodes(xp)
-config$modify_node(xp, i = 1L, bezirke = "123-125", etp = 123, etps = 234)
-config$modify_node(xp, 6, etp = "666")
-config$get_nodes(xp) # check the changes
+# Even though removed from the XML tree the config structure still contains
+# the removed items. E.g. item 5 still exists:
+config$section_PotentielleVerdunstung$item_5
 
-xp <- xpaths$PotentielleVerdunstung
-config$get_nodes(xp)
-#config$modify_node(xp, ...)
+# To remove the items also from the config structure, we need to update it
+config <- config$update()
 
-# TODO: Add/remove nodes
+# Item 5 does not exist any more (is NULL):
+config$section_PotentielleVerdunstung$item_5
+
+# Note that the list elements have been renamed. As there is only
+# one remaining item, it is just called "item" (without a number)
+
+# Change the value in the remaining item (representing all "bezirke")
+config$section_PotentielleVerdunstung$item$set(etp = 666, etps = 555)
+config$section_PotentielleVerdunstung$item
 ```
 
 ## Run Abimo with the modified configuration
@@ -151,7 +166,8 @@ new_xml_file <- config$save(name = "config_tmp.xml")
 If something goes wrong, you may compare the created xml file with the
 original file, e.g. using TortoiseSVN->Diff...
 
-```{r open-tempdir}
+```{r open-tempdir, eval = FALSE}
 # Open the folder containing the xml file
 kwb.utils::hsOpenWindowsExplorer(dirname(new_xml_file))
 ```
+
